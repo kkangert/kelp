@@ -3,7 +3,7 @@ package top.kangert.elp.expression;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Environment {
+public class Environment implements Cloneable {
     private final Map<String, Object> variables = new HashMap<>();
 
     public void setVariable(String name, Object value) {
@@ -12,5 +12,12 @@ public class Environment {
 
     public Object getVariable(String name) {
         return variables.get(name);
+    }
+
+    @Override
+    public Environment clone() {
+        Environment clone = new Environment();
+        clone.variables.putAll(variables);
+        return clone;
     }
 }

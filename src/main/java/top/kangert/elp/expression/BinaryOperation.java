@@ -12,7 +12,7 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public Object evaluate(Environment env) {
+    public Object evaluate(Environment env) throws Exception {
         double leftValue = ((Number) left.evaluate(env)).doubleValue();
         double rightValue = ((Number) right.evaluate(env)).doubleValue();
         return operator.apply(leftValue, rightValue);

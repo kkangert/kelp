@@ -1,7 +1,7 @@
 package top.kangert.elp.expression;
 
 public abstract class Expression {
-    public abstract Object evaluate(Environment env);
+    public abstract Object evaluate(Environment env) throws Exception;
 }
 
 

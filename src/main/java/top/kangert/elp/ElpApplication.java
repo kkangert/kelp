@@ -1,19 +1,13 @@
 package top.kangert.elp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import top.kangert.elp.expression.Environment;
-import top.kangert.elp.expression.Expression;
-import top.kangert.elp.expression.Lexer;
-import top.kangert.elp.expression.Parser;
-import top.kangert.elp.expression.Token;
-import top.kangert.elp.expression.TokenType;
+import top.kangert.elp.expression.ExpressionEngine;
+
 
 @SpringBootApplication
 public class ElpApplication {
@@ -24,7 +18,7 @@ public class ElpApplication {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Environment env = new Environment();
         // 定义变量
         env.setVariable("test", new Object[] { new HashMap<>() {
@@ -51,19 +45,14 @@ public class ElpApplication {
         });
         String input = "${test[1][keyName]}";
 
-        // input = "${str.subString(testStr, 7, 14)}";
+        input = "${str.subString(testStr, 7, 14)}";
 
         // input = "${test[1].keyName}";
 
-        input = "${obj[keyName]}";
+        // input = "${obj[keyName]}";
 
-        Lexer lexer = new Lexer(input.substring(2, input.length() - 1));
-        List<Token> tokens = lexer.tokenizer();
-
-        Parser parser = new Parser(tokens);
-        Expression expr = parser.buildAst();
-
-        Object result = expr.evaluate(env);
+        ExpressionEngine engine = new ExpressionEngine(env);
+        Object result = engine.evaluate(input);
         System.out.println(result);
     }
 

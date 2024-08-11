@@ -109,7 +109,6 @@ public class Parser {
                 String methodName = consumeToken().getValue().toString(); // Consume method name
                 expr = parseMethodCall(expr, methodName);
             } else if (token.getType() == TokenType.LBRACKET) {
-                consumeToken();
                 expr = parseArrayOrMapAccess();
             } else {
                 break; // 如果不是点或方括号，则结束解析
@@ -150,27 +149,54 @@ public class Parser {
      * 
      * @return 表达式
      */
-    private Expression parseArrayOrMapAccess() {
+    public Expression parseArrayOrMapAccess() {
         Token identifierToken = previousToken();
         if (identifierToken.getType() != TokenType.IDENTIFIER) {
             throw new RuntimeException("Expected an identifier before '['");
         }
 
-        // consumeToken(); // Consume '['
-        Expression indexOrKeyExpr = parseExpression();
-        if (consumeToken().getType() != TokenType.RBRACKET) {
-            throw new RuntimeException("Expected ']' after array index expression");
+        String identifier = identifierToken.getValue().toString();
+        consumeToken(); // Consume '['
+
+        List<Expression> accessExpressions = new ArrayList<>();
+        while (true) {
+            Expression indexOrKeyExpr = parseExpression();
+            consumeToken(); // Consume ']'
+
+            // 创建 ArrayAccess 或 ObjectKeyAccess 表达式
+            Expression accessExpr = createAccessExpression(identifier, indexOrKeyExpr);
+
+            // 将当前访问表达式添加到列表中
+            accessExpressions.add(accessExpr);
+
+            // 检查是否有更多的嵌套访问
+            if (currentToken().getType() != TokenType.LBRACKET) {
+                break;
+            }
+
+            // 如果有更多嵌套访问，则继续消费 '['
+            consumeToken(); // Consume '['
+            // 更新标识符为当前访问表达式
+            identifier = currentToken().getValue().toString();
         }
 
-        // 检查是否有更多的方括号访问
-        if (currentToken().getType() == TokenType.LBRACKET) {
-            return new ArrayAccess(identifierToken.getValue().toString(), indexOrKeyExpr);
+        // 构建完整的访问表达式树
+        Expression result = accessExpressions.get(0);
+        for (int i = 1; i < accessExpressions.size(); i++) {
+            Expression currentExpression = accessExpressions.get(i);
+            result = new NestedAccess(result, currentExpression);
         }
 
+        return result;
+    }
+
+    private Expression createAccessExpression(String identifier, Expression indexOrKeyExpr) {
         if (indexOrKeyExpr instanceof IntegerLiteral) {
-            return new ArrayAccess(identifierToken.getValue().toString(), indexOrKeyExpr);
+            // 创建 ArrayAccess 表达式
+            return new ArrayAccess(identifier, indexOrKeyExpr);
         } else {
-            return new ObjectKeyAccess(identifierToken.getValue().toString(), indexOrKeyExpr);
+            // 创建 ObjectKeyAccess 表达式
+            return new ObjectKeyAccess(identifier, indexOrKeyExpr);
         }
     }
 

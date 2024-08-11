@@ -7,6 +7,10 @@ public class IntegerLiteral extends Expression {
         this.value = value;
     }
 
+    public int getValue() {
+        return value;
+    }
+
     @Override
     public Object evaluate(Environment env) {
         return value;
