@@ -51,6 +51,8 @@ public class ElpApplication {
 
         // input = "${obj[keyName]}";
 
+        input = "${(1 + 1) * 3 / 2}";
+
         ExpressionEngine engine = new ExpressionEngine(env);
         Object result = engine.evaluate(input);
         System.out.println(result);
