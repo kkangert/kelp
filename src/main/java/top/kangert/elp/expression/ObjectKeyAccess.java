@@ -3,17 +3,17 @@ package top.kangert.elp.expression;
 import java.util.Map;
 
 public class ObjectKeyAccess extends Expression {
-    private final String variableName;
+    private final String identifier;
     private final Expression keyExpression;
 
-    public ObjectKeyAccess(String variableName, Expression keyExpression) {
-        this.variableName = variableName;
+    public ObjectKeyAccess(String identifier, Expression keyExpression) {
+        this.identifier = identifier;
         this.keyExpression = keyExpression;
     }
 
     @Override
     public Object evaluate(Environment env) throws Exception {
-        Object object = env.getVariable(variableName);
+        Object object = env.getVariable(identifier);
 
         if (object instanceof String) {
             return (String) object;
@@ -39,6 +39,6 @@ public class ObjectKeyAccess extends Expression {
 
     @Override
     public String toString() {
-        return variableName + "[" + keyExpression + "]";
+        return identifier + "[" + keyExpression + "]";
     }
 }

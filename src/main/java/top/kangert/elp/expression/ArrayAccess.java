@@ -1,17 +1,17 @@
 package top.kangert.elp.expression;
 
 public class ArrayAccess extends Expression {
-    private final String variableName;
+    private final String identifier;
     private final Expression indexExpression;
 
-    public ArrayAccess(String variableName, Expression indexExpression) {
-        this.variableName = variableName;
+    public ArrayAccess(String identifier, Expression indexExpression) {
+        this.identifier = identifier;
         this.indexExpression = indexExpression;
     }
 
     @Override
     public Object evaluate(Environment env) throws Exception {
-        Object array = env.getVariable(variableName);
+        Object array = env.getVariable(identifier);
         if (!(array instanceof Object[] list)) {
             throw new Exception("Expected an array but got " + array.getClass().getSimpleName());
         }
@@ -32,6 +32,6 @@ public class ArrayAccess extends Expression {
 
     @Override
     public String toString() {
-        return variableName + "[" + indexExpression + "]";
+        return identifier + "[" + indexExpression + "]";
     }
 }
