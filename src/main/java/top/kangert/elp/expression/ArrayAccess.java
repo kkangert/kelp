@@ -12,9 +12,12 @@ public class ArrayAccess extends Expression {
     @Override
     public Object evaluate(Environment env) throws Exception {
         Object array = env.getVariable(identifier);
-        if (!(array instanceof Object[] list)) {
+        if (!(array instanceof Object[])) {
             throw new Exception("Expected an array but got " + array.getClass().getSimpleName());
         }
+
+        // 数据强转
+        Object[] list = (Object[]) array;
 
         // 支持arr[exp]形式的访问
         Object index = indexExpression.evaluate(env);
