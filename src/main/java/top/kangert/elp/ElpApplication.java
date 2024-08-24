@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import top.kangert.elp.expression.Environment;
 import top.kangert.elp.expression.ExpressionEngine;
 
-
 @SpringBootApplication
 public class ElpApplication {
 
@@ -43,15 +42,14 @@ public class ElpApplication {
                 put("a", "kangert");
             }
         });
-        String input = "${test[1][keyName]}";
+        String input = "${str.subString(test[1][keyName], 0, 3)}";
 
         input = "${str.subString(testStr, 7, 14)}";
 
-        // input = "${test[1].keyName}";
-
-        // input = "${obj[keyName]}";
+        input = "${obj[keyName]}";
 
         input = "${(1 + 1) * 3 / 2}";
+        input = "https://www.xxx.com/${testStr}/q?=keyword=${keyName}";
 
         ExpressionEngine engine = new ExpressionEngine(env);
         Object result = engine.evaluate(input);
