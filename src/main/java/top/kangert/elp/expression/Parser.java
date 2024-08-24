@@ -18,10 +18,18 @@ public class Parser {
     /**
      * 构建抽象语法树
      * 
-     * @return 表达式
+     * @return 表达式列表
      */
-    public Expression buildAst() {
-        return parseExpression();
+    public List<Expression> buildAst() {
+        List<Expression> expressions = new ArrayList<>();
+        while (tokens.get(currentTokenIndex).getType() != TokenType.EOF) {
+            Expression expression = parseExpression();
+            if (expression == null) {
+                continue;
+            }
+            expressions.add(expression);
+        }
+        return expressions;
     }
 
     /**
@@ -90,6 +98,9 @@ public class Parser {
             return expr;
         } else if (token.getType() == TokenType.LBRACKET) {
             return parseArrayOrMapAccess();
+        } else if (token.getType() == TokenType.STRING) {
+            consumeToken();
+            return new StringLiteral((String) token.getValue());
         }
         throw new RuntimeException("Invalid token at position " + token.getValue());
     }
@@ -149,7 +160,7 @@ public class Parser {
      * 
      * @return 表达式
      */
-    public Expression parseArrayOrMapAccess() {
+    private Expression parseArrayOrMapAccess() {
         Token identifierToken = previousToken();
         if (identifierToken.getType() != TokenType.IDENTIFIER) {
             throw new RuntimeException("Expected an identifier before '['");
