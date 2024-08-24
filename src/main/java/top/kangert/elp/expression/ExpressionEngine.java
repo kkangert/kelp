@@ -28,8 +28,12 @@ public class ExpressionEngine {
      * @throws Exception
      */
     public Object evaluate() throws Exception {
-        Expression ast = parser.buildAst();
-        return ast.evaluate(env);
+        List<Expression> ast = parser.buildAst();
+        String result = "";
+        for (Expression expression : ast) {
+            result+=expression.evaluate(env);
+        }
+        return result;
     }
 
     /**
@@ -41,8 +45,12 @@ public class ExpressionEngine {
      */
     public Object evaluate(String exp) throws Exception {
         tokenizer(exp);
-        Expression ast = parser.buildAst();
-        return ast.evaluate(env);
+        List<Expression> ast = parser.buildAst();
+        String result = "";
+        for (Expression expression : ast) {
+            result+=expression.evaluate(env);
+        }
+        return result;
     }
 
     /**
@@ -50,7 +58,7 @@ public class ExpressionEngine {
      * @param exp 表达式
      */
     private void tokenizer(String exp) {
-        this.lexer = new Lexer(exp.substring(2, exp.length() - 1));
+        this.lexer = new Lexer(exp);
         this.tokens = lexer.tokenizer();
         this.parser = new Parser(tokens);
     }

@@ -2,6 +2,8 @@ package top.kangert.elp.expression;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 词法分析器
@@ -17,20 +19,46 @@ public class Lexer {
 
     /**
      * 分词
+     * 
      * @return 分词列表
      */
     public List<Token> tokenizer() {
         List<Token> tokens = new ArrayList<>();
-        Token token;
-        do {
-            token = nextToken();
-            tokens.add(token);
-        } while (token.getType() != TokenType.EOF);
+
+        // 抽取表达式片段，除此之外的内容都按照字符串处理,抽取部分按照解析逻辑进行，保持先后顺序
+        List<PartInfo> partInfos = extractExpChuck(input);
+        for (PartInfo partInfo : partInfos) {
+            String part = partInfo.part;
+            int start = partInfo.start;
+            int end = partInfo.end;
+
+            int startPos = position;
+            int endPos = start;
+
+            // 添加字符串
+            tokens.add(new Token(TokenType.STRING, input.substring(startPos, endPos)));
+
+            // 添加表达式，跳过${
+            position = start + 2;
+            Token token;
+            do {
+                token = nextToken();
+                tokens.add(token);
+            } while (token.getType() != TokenType.EOF && input.charAt(position) != '}');
+            
+            // 跳过}字符
+            position++;
+        }
+
+        // 添加结束标记
+        tokens.add(new Token(TokenType.EOF, null));
+
         return tokens;
     }
 
     /**
      * 获取下一个分词
+     * 
      * @return 分词
      */
     private Token nextToken() {
@@ -85,6 +113,7 @@ public class Lexer {
 
     /**
      * 解析数字
+     * 
      * @return 数字
      */
     private Token parseNumber() {
@@ -102,6 +131,7 @@ public class Lexer {
 
     /**
      * 解析双引号字符串
+     * 
      * @return 双引号字符串
      */
     private Token parseQuotedString() {
@@ -120,6 +150,7 @@ public class Lexer {
 
     /**
      * 解析标识符
+     * 
      * @return 标识符
      */
     private Token parseIdentifier() {
@@ -130,6 +161,27 @@ public class Lexer {
         }
         String identifier = input.substring(startPos, position);
         return new Token(TokenType.IDENTIFIER, identifier);
+    }
+
+    /**
+     * 抽取${*}中的内容，其余部分按照字符串拼接
+     * 
+     * @param input
+     * @return
+     */
+    public static List<PartInfo> extractExpChuck(String input) {
+        List<PartInfo> exps = new ArrayList<PartInfo>();
+        Pattern pattern = Pattern.compile("\\$\\{([^}]*)\\}");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            // group(1) 获取括号内的内容
+            String matcherStr = matcher.group(1);
+            exps.add(new PartInfo(matcherStr, start, end));
+        }
+        return exps;
     }
 
     /**
