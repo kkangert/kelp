@@ -169,7 +169,7 @@ public class Lexer {
      * @param input
      * @return
      */
-    public static List<PartInfo> extractExpChuck(String input) {
+    private List<PartInfo> extractExpChuck(String input) {
         List<PartInfo> exps = new ArrayList<PartInfo>();
         Pattern pattern = Pattern.compile("\\$\\{([^}]*)\\}");
         Matcher matcher = pattern.matcher(input);
