@@ -18,20 +18,20 @@ public class ObjectKeyAccess extends Expression {
         if (object instanceof String) {
             return (String) object;
         }
-        
+
         if (!(object instanceof Map)) {
-            throw new Exception("Expected an object but got " + object.getClass().getSimpleName());
+            throw new KelpException("Expected an object but got " + object.getClass().getSimpleName());
         }
 
         Object key = keyExpression.evaluate(env);
         if (!(key instanceof String)) {
-            throw new Exception("Expected a string key but got " + key.getClass().getSimpleName());
+            throw new KelpException("Expected a string key but got " + key.getClass().getSimpleName());
         }
 
         Map<String, ?> map = (Map<String, ?>) object;
         String keyStr = (String) key;
         if (!map.containsKey(keyStr)) {
-            throw new Exception("Key not found: " + keyStr);
+            throw new KelpException("Cannot find the key for '" + keyStr + "' in the '" + identifier + "'");
         }
 
         return map.get(keyStr);
