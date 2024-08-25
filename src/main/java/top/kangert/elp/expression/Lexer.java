@@ -40,7 +40,10 @@ public class Lexer {
                 int endPos = start;
 
                 // 添加字符串
-                tokens.add(new Token(TokenType.STRING, input.substring(startPos, endPos)));
+                String val = input.substring(startPos, endPos);
+                if (!"".equals(val) || val != null) {
+                    tokens.add(new Token(TokenType.STRING, val));
+                }
 
                 // 添加表达式，跳过${
                 position = start + 2;
