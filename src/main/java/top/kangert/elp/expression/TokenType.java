@@ -31,8 +31,8 @@ public enum TokenType {
    PERIOD("."),
    // 逗号
    COMMA(","),
-   // 双引号 "
-   QUOTE("\""),
+   // 双\单引号 "
+   QUOTE("\"、'"),
    // 结束标记
    EOF("EOF");
 
