@@ -30,13 +30,14 @@ public class ArrayAccess extends Expression {
             // 获取元素
             return list.get(idx);
         } else {
-            throw new Exception("Expected an array but got " + array.getClass().getSimpleName());
+            throw new KelpException("Expected an array but got " + array.getClass().getSimpleName());
         }
     }
 
     /**
      * 检查下标合法性
-     * @param env 上下文环境
+     * 
+     * @param env     上下文环境
      * @param arrSize 数组大小
      * @return 合法的下标
      * @throws Exception
@@ -45,12 +46,12 @@ public class ArrayAccess extends Expression {
         // 支持arr[exp]形式的访问
         Object index = indexExpression.evaluate(env);
         if (!(index instanceof Integer)) {
-            throw new Exception("Expected an integer index but got " + index.getClass().getSimpleName());
+            throw new KelpException("Expected an integer index but got " + index.getClass().getSimpleName());
         }
 
         int idx = (Integer) index;
         if (idx < 0 || idx >= arrSize) {
-            throw new Exception("Index out of bounds: " + idx);
+            throw new KelpException("Index out of bounds: " + idx);
         }
         return idx;
     }

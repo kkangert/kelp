@@ -28,7 +28,7 @@ public class NestedAccess extends Expression {
             // 如果基础值是映射，则使用 ObjectKeyAccess 评估
             return new ObjectKeyAccess(variableName, nestedExpression).evaluate(virtualEnv);
         } else {
-            throw new Exception("Base value is neither a list nor a map: " + baseValue.getClass().getSimpleName());
+            throw new KelpException("Base value is neither a list nor a map: " + baseValue.getClass().getSimpleName());
         }
     }
 

@@ -52,7 +52,8 @@ public class ElpApplication {
         // input = "https://www.xxx.com/${testStr}/q?=keyword=${keyName}";
         // input = "https://www.xxx.com/";
         input = "${obj[\"a\"]}";
-        input = "${obj['a']}";
+        input = "${obj['a1']}";
+        input = "${test[1]['a1']}";
 
         ExpressionEngine engine = new ExpressionEngine(env);
         Object result = engine.execute(input);
