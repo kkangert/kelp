@@ -50,6 +50,7 @@ public class ElpApplication {
 
         input = "${(1 + 1) * 3 / 2}";
         input = "https://www.xxx.com/${testStr}/q?=keyword=${keyName}";
+        input = "https://www.xxx.com/";
 
         ExpressionEngine engine = new ExpressionEngine(env);
         Object result = engine.evaluate(input);

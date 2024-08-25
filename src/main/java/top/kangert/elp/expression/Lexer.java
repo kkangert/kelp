@@ -26,28 +26,33 @@ public class Lexer {
         List<Token> tokens = new ArrayList<>();
 
         // 抽取表达式片段，除此之外的内容都按照字符串处理,抽取部分按照解析逻辑进行，保持先后顺序
-        List<PartInfo> partInfos = extractExpChuck(input);
-        for (PartInfo partInfo : partInfos) {
-            String part = partInfo.part;
-            int start = partInfo.start;
-            int end = partInfo.end;
+        List<Integer> chuckPos = extractExpChuckPos(input);
 
-            int startPos = position;
-            int endPos = start;
+        // 若无切片说明内部无合法表达式，按照字符串原样返回
+        if (chuckPos.size() == 0) {
+            tokens.add(new Token(TokenType.STRING, input));
+        } else {
+            // 切片分段处理
+            for (int start : chuckPos) {
+                // 当前位置i作为起始位置
+                int startPos = position;
+                // 第一个切片的开始位置作为第一段字符串的结束位置
+                int endPos = start;
 
-            // 添加字符串
-            tokens.add(new Token(TokenType.STRING, input.substring(startPos, endPos)));
+                // 添加字符串
+                tokens.add(new Token(TokenType.STRING, input.substring(startPos, endPos)));
 
-            // 添加表达式，跳过${
-            position = start + 2;
-            Token token;
-            do {
-                token = nextToken();
-                tokens.add(token);
-            } while (token.getType() != TokenType.EOF && input.charAt(position) != '}');
-            
-            // 跳过}字符
-            position++;
+                // 添加表达式，跳过${
+                position = start + 2;
+                Token token;
+                do {
+                    token = nextToken();
+                    tokens.add(token);
+                } while (token.getType() != TokenType.EOF && input.charAt(position) != '}');
+
+                // 跳过}字符
+                position++;
+            }
         }
 
         // 添加结束标记
@@ -164,13 +169,13 @@ public class Lexer {
     }
 
     /**
-     * 抽取${*}中的内容，其余部分按照字符串拼接
+     * 抽取${*}中的内容，获得每个表达式切片的起始位置
      * 
-     * @param input
-     * @return
+     * @param input 含有表达式的字符串
+     * @return 表达式切片的起始位置
      */
-    private List<PartInfo> extractExpChuck(String input) {
-        List<PartInfo> exps = new ArrayList<PartInfo>();
+    private List<Integer> extractExpChuckPos(String input) {
+        List<Integer> exps = new ArrayList<Integer>();
         Pattern pattern = Pattern.compile("\\$\\{([^}]*)\\}");
         Matcher matcher = pattern.matcher(input);
 
@@ -179,7 +184,7 @@ public class Lexer {
             int end = matcher.end();
             // group(1) 获取括号内的内容
             String matcherStr = matcher.group(1);
-            exps.add(new PartInfo(matcherStr, start, end));
+            exps.add(start);
         }
         return exps;
     }
