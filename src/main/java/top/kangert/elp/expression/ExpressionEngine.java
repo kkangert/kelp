@@ -27,11 +27,11 @@ public class ExpressionEngine {
      * @return 执行结果
      * @throws Exception
      */
-    public Object evaluate() throws Exception {
+    public Object execute() throws Exception {
         List<Expression> ast = parser.buildAst();
         String result = "";
         for (Expression expression : ast) {
-            result+=expression.evaluate(env);
+            result += expression.evaluate(env);
         }
         return result;
     }
@@ -43,18 +43,19 @@ public class ExpressionEngine {
      * @return 执行结果
      * @throws Exception 异常
      */
-    public Object evaluate(String exp) throws Exception {
+    public Object execute(String exp) throws Exception {
         tokenizer(exp);
         List<Expression> ast = parser.buildAst();
         String result = "";
         for (Expression expression : ast) {
-            result+=expression.evaluate(env);
+            result += expression.evaluate(env);
         }
         return result;
     }
 
     /**
      * 分词
+     * 
      * @param exp 表达式
      */
     private void tokenizer(String exp) {

@@ -54,9 +54,8 @@ public class ElpApplication {
         input = "${obj[\"a\"]}";
         input = "${obj['a']}";
 
-
         ExpressionEngine engine = new ExpressionEngine(env);
-        Object result = engine.evaluate(input);
+        Object result = engine.execute(input);
         System.out.println(result);
     }
 
