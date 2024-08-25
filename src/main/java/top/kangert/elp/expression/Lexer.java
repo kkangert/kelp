@@ -41,7 +41,7 @@ public class Lexer {
 
                 // 添加字符串
                 String val = input.substring(startPos, endPos);
-                if (!"".equals(val) || val != null) {
+                if (!"".equals(val) && val != null) {
                     tokens.add(new Token(TokenType.STRING, val));
                 }
 
@@ -154,6 +154,10 @@ public class Lexer {
         }
         position++; // Skip the closing quote
         String value = input.substring(startPos, position - 1);
+
+        // 去除引号字符串
+        value = value.replaceAll("\"", "");
+        value = value.replaceAll("'", "");
         return new Token(TokenType.QUOTE, value);
     }
 

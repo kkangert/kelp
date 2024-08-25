@@ -100,12 +100,7 @@ public class Parser {
             return parseArrayOrMapAccess();
         } else if (token.getType() == TokenType.STRING || token.getType() == TokenType.QUOTE) {
             consumeToken();
-
-            // 解析出KEY字符串
-            String val = (String) token.getValue();
-            val = val.replaceAll("\"", "");
-            val = val.replaceAll("'", "");
-            return new StringLiteral(val);
+            return new StringLiteral((String) token.getValue());
         }
         throw new RuntimeException("Invalid token at position " + token.getValue());
     }
