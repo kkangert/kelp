@@ -105,6 +105,7 @@ public class Lexer {
                 position++;
                 return new Token(TokenType.RBRACKET, "]");
             case '"':
+            case '\'':
                 return parseQuotedString();
             default:
                 if (Character.isDigit(ch)) {
@@ -135,14 +136,14 @@ public class Lexer {
     }
 
     /**
-     * 解析双引号字符串
+     * 解析双\单引号字符串
      * 
-     * @return 双引号字符串
+     * @return 双\单引号字符串
      */
     private Token parseQuotedString() {
         int startPos = position;
         position++; // Skip the opening quote
-        while (position < input.length() && input.charAt(position) != '"') {
+        while (position < input.length() && input.charAt(position) != '"' && input.charAt(position) != '\'') {
             position++;
         }
         if (position >= input.length()) {

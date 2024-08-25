@@ -98,9 +98,14 @@ public class Parser {
             return expr;
         } else if (token.getType() == TokenType.LBRACKET) {
             return parseArrayOrMapAccess();
-        } else if (token.getType() == TokenType.STRING) {
+        } else if (token.getType() == TokenType.STRING || token.getType() == TokenType.QUOTE) {
             consumeToken();
-            return new StringLiteral((String) token.getValue());
+
+            // 解析出KEY字符串
+            String val = (String) token.getValue();
+            val = val.replaceAll("\"", "");
+            val = val.replaceAll("'", "");
+            return new StringLiteral(val);
         }
         throw new RuntimeException("Invalid token at position " + token.getValue());
     }

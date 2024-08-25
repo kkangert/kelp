@@ -44,13 +44,16 @@ public class ElpApplication {
         });
         String input = "${str.subString(test[1][keyName], 0, 3)}";
 
-        input = "${str.subString(testStr, 7, 14)}";
+        input = "${str.subString(str.subString(testStr, 7, 14).toString(), 0, 2)}";
 
-        input = "${obj[keyName]}";
+        // input = "${obj[keyName]}";
 
-        input = "${(1 + 1) * 3 / 2}";
-        input = "https://www.xxx.com/${testStr}/q?=keyword=${keyName}";
-        input = "https://www.xxx.com/";
+        // input = "${(1 + 1) * 3 / 2}";
+        // input = "https://www.xxx.com/${testStr}/q?=keyword=${keyName}";
+        // input = "https://www.xxx.com/";
+        input = "${obj[\"a\"]}";
+        input = "${obj['a']}";
+
 
         ExpressionEngine engine = new ExpressionEngine(env);
         Object result = engine.evaluate(input);
